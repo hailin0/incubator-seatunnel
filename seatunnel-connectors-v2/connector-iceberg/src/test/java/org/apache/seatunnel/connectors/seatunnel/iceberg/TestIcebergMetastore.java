@@ -24,6 +24,9 @@ import org.apache.iceberg.hive.TestHiveMetastore;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.io.File;
 
 public class TestIcebergMetastore {
 
@@ -37,11 +40,14 @@ public class TestIcebergMetastore {
         METASTORE_URI = METASTORE.hiveConf().get(HiveConf.ConfVars.METASTOREURIS.varname);
     }
 
-    // @Test
+    @Test
     public void testUseHiveMetastore() {
+        String warehousePath = "/tmp/seatunnel/iceberg/hive/";
+        new File(warehousePath).mkdirs();
+
         HiveCatalog catalog = (HiveCatalog) new IcebergCatalogFactory("seatunnel",
             "hive",
-            "file:///tmp/seatunnel/iceberg/hive/",
+            "file://" + warehousePath,
             METASTORE_URI)
             .create();
         catalog.createNamespace(Namespace.of("test_database"));
