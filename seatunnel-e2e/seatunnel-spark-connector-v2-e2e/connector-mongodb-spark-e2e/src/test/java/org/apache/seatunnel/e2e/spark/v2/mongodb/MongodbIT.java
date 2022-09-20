@@ -136,12 +136,22 @@ public class MongodbIT extends SparkContainer {
 
         sourceTable.deleteMany(new Document());
         sourceTable.insertMany(TEST_DATASET);
+
+        log.info("Read mongodb source table: {}", readData(MONGODB_SOURCE_TABLE));
     }
 
-    private List<Document> readSinkData() {
+    private List<Document> readSinkData() throws InterruptedException {
+        for (int i = 0; i < 10; i++) {
+            log.info("{} Read mongodb sink table: {}", i, readData(MONGODB_SINK_TABLE));
+            Thread.sleep(1000L);
+        }
+        return readData(MONGODB_SINK_TABLE);
+    }
+
+    private List<Document> readData(String collection) {
         MongoCollection<Document> sinkTable = client
             .getDatabase(MONGODB_DATABASE)
-            .getCollection(MONGODB_SINK_TABLE);
+            .getCollection(collection);
         MongoCursor<Document> cursor = sinkTable.find()
             .sort(Sorts.ascending("id"))
             .cursor();

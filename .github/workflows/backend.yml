@@ -31,7 +31,7 @@ concurrency:
 
 jobs:
   license-header:
-    if: github.repository == 'apache/incubator-seatunnel'
+    if: github.repository == 'hailin0/incubator-seatunnel/'
     name: License header
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -43,7 +43,7 @@ jobs:
         uses: apache/skywalking-eyes@985866ce7e324454f61e22eb2db2e998db09d6f3
 
   code-style:
-    if: github.repository == 'apache/incubator-seatunnel'
+    if: github.repository == 'hailin0/incubator-seatunnel/'
     name: Code style
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -55,7 +55,7 @@ jobs:
         run: ./mvnw --batch-mode --quiet --no-snapshot-updates clean checkstyle:check
 
   dead-link:
-    if: github.repository == 'apache/incubator-seatunnel'
+    if: github.repository == 'hailin0/incubator-seatunnel/'
     name: Dead links
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -68,7 +68,7 @@ jobs:
           done
 
   sanity-check:
-    if: github.repository == 'apache/incubator-seatunnel'
+    if: github.repository == 'hailin0/incubator-seatunnel/'
     name: Sanity check results
     needs: [ license-header, code-style, dead-link ]
     runs-on: ubuntu-latest
@@ -81,7 +81,7 @@ jobs:
           [[ ${{ needs.dead-link.result }} == 'success' ]] || exit 1;
 
   build:
-    if: github.repository == 'apache/incubator-seatunnel'
+    if: github.repository == 'hailin0/incubator-seatunnel/'
     name: Build
     needs: [ sanity-check ]
     strategy:
@@ -111,7 +111,7 @@ jobs:
           -D"maven.wagon.httpconnectionManager.ttlSeconds"=120
 
   dependency-license:
-    if: github.repository == 'apache/incubator-seatunnel'
+    if: github.repository == 'hailin0/incubator-seatunnel/'
     name: Dependency licenses
     needs: [ sanity-check ]
     runs-on: ubuntu-latest

@@ -31,6 +31,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.Projections;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.slf4j.Logger;
@@ -38,6 +39,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+@Slf4j
 public class MongodbSourceReader extends AbstractSingleSplitReader<SeaTunnelRow> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MongodbSourceReader.class);
@@ -92,11 +94,16 @@ public class MongodbSourceReader extends AbstractSingleSplitReader<SeaTunnelRow>
             .projection(projectionFields)
             .iterator()) {
             while (mongoCursor.hasNext()) {
-                Document document = mongoCursor.next();
-                if (useSimpleTextSchema) {
-                    output.collect(new SeaTunnelRow(new Object[]{document.toJson()}));
-                } else {
-                    output.collect(deserializer.deserialize(document));
+                try {
+                    Document document = mongoCursor.next();
+                    log.info("Read mongodb document: {}", document);
+                    if (useSimpleTextSchema) {
+                        output.collect(new SeaTunnelRow(new Object[]{document.toJson()}));
+                    } else {
+                        output.collect(deserializer.deserialize(document));
+                    }
+                } catch (Throwable e) {
+                    log.error("Failed to read mongodb", e);
                 }
             }
         } finally {
