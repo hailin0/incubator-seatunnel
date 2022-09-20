@@ -27,10 +27,12 @@ import org.apache.seatunnel.connectors.seatunnel.mongodb.data.Serializer;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 
 import java.io.IOException;
 
+@Slf4j
 public class MongodbSinkWriter extends AbstractSinkWriter<SeaTunnelRow, Void> {
 
     private final SeaTunnelRowType rowType;
@@ -61,14 +63,19 @@ public class MongodbSinkWriter extends AbstractSinkWriter<SeaTunnelRow, Void> {
 
     @Override
     public void write(SeaTunnelRow row) throws IOException {
-        Document document;
-        if (useSimpleTextSchema) {
-            String simpleText = row.getField(0).toString();
-            document = Document.parse(simpleText);
-        } else {
-            document = serializer.serialize(row);
+        try {
+            log.info("Write SeaTunnelRow: {}", row);
+            Document document;
+            if (useSimpleTextSchema) {
+                String simpleText = row.getField(0).toString();
+                document = Document.parse(simpleText);
+            } else {
+                document = serializer.serialize(row);
+            }
+            mongoCollection.insertOne(document);
+        } catch (Throwable e) {
+            log.error("Failed to write mongodb", e);
         }
-        mongoCollection.insertOne(document);
     }
 
     @Override
