@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-package org.apache.seatunnel.plugin.discovery.seatunnel;
+package org.apache.seatunnel.common.plugin.discovery;
 
 import org.apache.seatunnel.api.sink.SeaTunnelSink;
-import org.apache.seatunnel.plugin.discovery.AbstractPluginDiscovery;
+import org.apache.seatunnel.common.plugin.AbstractPluginDiscovery;
 
 import java.net.URL;
 import java.util.function.BiConsumer;

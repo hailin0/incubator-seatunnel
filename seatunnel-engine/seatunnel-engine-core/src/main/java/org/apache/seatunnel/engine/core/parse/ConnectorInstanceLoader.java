@@ -25,10 +25,9 @@ import org.apache.seatunnel.api.table.type.SeaTunnelRow;
 import org.apache.seatunnel.api.transform.SeaTunnelTransform;
 import org.apache.seatunnel.common.constants.CollectionConstants;
 import org.apache.seatunnel.common.constants.JobMode;
-import org.apache.seatunnel.plugin.discovery.PluginIdentifier;
-import org.apache.seatunnel.plugin.discovery.seatunnel.SeaTunnelSinkPluginDiscovery;
-import org.apache.seatunnel.plugin.discovery.seatunnel.SeaTunnelSourcePluginDiscovery;
-import org.apache.seatunnel.plugin.discovery.seatunnel.SeaTunnelTransformPluginDiscovery;
+import org.apache.seatunnel.common.plugin.discovery.SeaTunnelSinkPluginDiscovery;
+import org.apache.seatunnel.common.plugin.discovery.SeaTunnelSourcePluginDiscovery;
+import org.apache.seatunnel.common.plugin.discovery.SeaTunnelTransformPluginDiscovery;
 
 import org.apache.seatunnel.shade.com.typesafe.config.Config;
 
