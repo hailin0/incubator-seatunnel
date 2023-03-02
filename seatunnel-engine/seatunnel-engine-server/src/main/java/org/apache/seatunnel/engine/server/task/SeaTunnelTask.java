@@ -283,8 +283,8 @@ public abstract class SeaTunnelTask extends AbstractTask {
         return getFlowInfo((action, set) -> set.addAll(action.getJarUrls()));
     }
 
-    public Set<Long> getActionIds() {
-        return getFlowInfo((action, set) -> set.add(action.getId()));
+    public Set<String> getActionNames() {
+        return getFlowInfo((action, set) -> set.add(action.getName()));
     }
 
     private <T> Set<T> getFlowInfo(BiConsumer<Action, Set<T>> function) {
@@ -340,10 +340,10 @@ public abstract class SeaTunnelTask extends AbstractTask {
         }
     }
 
-    public void addState(Barrier barrier, long actionId, List<byte[]> state) {
+    public void addState(Barrier barrier, String actionName, List<byte[]> state) {
         List<ActionSubtaskState> states =
                 checkpointStates.computeIfAbsent(barrier.getId(), id -> new ArrayList<>());
-        states.add(new ActionSubtaskState(actionId, indexID, state));
+        states.add(new ActionSubtaskState(actionName, indexID, state));
     }
 
     @Override
@@ -368,11 +368,11 @@ public abstract class SeaTunnelTask extends AbstractTask {
     @Override
     public void restoreState(List<ActionSubtaskState> actionStateList) throws Exception {
         log.debug("restoreState for SeaTunnelTask[{}]", actionStateList);
-        Map<Long, List<ActionSubtaskState>> stateMap =
+        Map<String, List<ActionSubtaskState>> stateMap =
                 actionStateList.stream()
                         .collect(
                                 Collectors.groupingBy(
-                                        ActionSubtaskState::getActionId, Collectors.toList()));
+                                        ActionSubtaskState::getActionName, Collectors.toList()));
         allCycles.stream()
                 .filter(cycle -> cycle instanceof ActionFlowLifeCycle)
                 .map(cycle -> (ActionFlowLifeCycle) cycle)
@@ -381,7 +381,7 @@ public abstract class SeaTunnelTask extends AbstractTask {
                             try {
                                 actionFlowLifeCycle.restoreState(
                                         stateMap.getOrDefault(
-                                                actionFlowLifeCycle.getAction().getId(),
+                                                actionFlowLifeCycle.getAction().getName(),
                                                 Collections.emptyList()));
                             } catch (Exception e) {
                                 sneakyThrow(e);

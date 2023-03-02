@@ -61,7 +61,7 @@ public class TransformFlowLifeCycle<T> extends ActionFlowLifeCycle
                 prepareClose = true;
             }
             if (barrier.snapshot()) {
-                runningTask.addState(barrier, action.getId(), Collections.emptyList());
+                runningTask.addState(barrier, action.getName(), Collections.emptyList());
             }
             // ack after #addState
             runningTask.ack(barrier);

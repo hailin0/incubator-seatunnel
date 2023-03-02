@@ -50,9 +50,9 @@ public class Pipeline {
         return vertexes;
     }
 
-    public Map<Long, Integer> getActions() {
+    public Map<String, Integer> getActions() {
         return vertexes.values().stream()
                 .map(ExecutionVertex::getAction)
-                .collect(Collectors.toMap(Action::getId, Action::getParallelism));
+                .collect(Collectors.toMap(Action::getName, Action::getParallelism));
     }
 }

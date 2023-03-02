@@ -154,7 +154,7 @@ public class SourceSplitEnumeratorTask<SplitT extends SourceSplit> extends Coord
                                     (CheckpointBarrier) barrier,
                                     Collections.singletonList(
                                             new ActionSubtaskState(
-                                                    source.getId(),
+                                                    source.getName(),
                                                     -1,
                                                     Collections.singletonList(serialize)))));
         }

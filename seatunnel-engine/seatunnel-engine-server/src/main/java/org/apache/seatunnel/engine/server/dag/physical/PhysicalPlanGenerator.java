@@ -114,9 +114,9 @@ public class PhysicalPlanGenerator {
     /**
      * <br>
      * key: the subtask locations; <br>
-     * value: all actions in this subtask; f0: action id, f1: action index;
+     * value: all actions in this subtask; f0: action name, f1: action index;
      */
-    private final Map<TaskLocation, Set<Tuple2<Long, Integer>>> subtaskActions;
+    private final Map<TaskLocation, Set<Tuple2<String, Integer>>> subtaskActions;
 
     private final IMap<Object, Object> runningJobStateIMap;
 
@@ -270,7 +270,7 @@ public class PhysicalPlanGenerator {
                                 subtaskActions.put(
                                         taskLocation,
                                         Collections.singleton(
-                                                Tuple2.tuple2(sinkAction.getId(), -1)));
+                                                Tuple2.tuple2(sinkAction.getName(), -1)));
 
                                 return new PhysicalVertex(
                                         atomicInteger.incrementAndGet(),
@@ -344,8 +344,10 @@ public class PhysicalPlanGenerator {
                                     long shuffleActionId = idGenerator.getNextId();
                                     String shuffleActionName =
                                             String.format(
-                                                    "Shuffle [table[%s] -> %s]",
-                                                    sinkTableIndex, sinkAction.getName());
+                                                    "%s -> %s -> %s",
+                                                    shuffleAction.getName(),
+                                                sinkTableId,
+                                                    sinkAction.getName());
                                     ShuffleAction shuffleActionOfSinkFlow =
                                             new ShuffleAction(
                                                     shuffleActionId,
@@ -474,7 +476,8 @@ public class PhysicalPlanGenerator {
                             startingTasks.add(taskLocation);
                             subtaskActions.put(
                                     taskLocation,
-                                    Collections.singleton(Tuple2.tuple2(sourceAction.getId(), -1)));
+                                    Collections.singleton(
+                                            Tuple2.tuple2(sourceAction.getName(), -1)));
                             enumeratorTaskIDMap.put(sourceAction, taskLocation);
 
                             return new PhysicalVertex(
@@ -633,8 +636,8 @@ public class PhysicalPlanGenerator {
         pipelineTasks.add(task.getTaskLocation());
         subtaskActions.put(
                 task.getTaskLocation(),
-                task.getActionIds().stream()
-                        .map(id -> Tuple2.tuple2(id, task.getTaskLocation().getTaskIndex()))
+                task.getActionNames().stream()
+                        .map(name -> Tuple2.tuple2(name, task.getTaskLocation().getTaskIndex()))
                         .collect(Collectors.toSet()));
     }
 

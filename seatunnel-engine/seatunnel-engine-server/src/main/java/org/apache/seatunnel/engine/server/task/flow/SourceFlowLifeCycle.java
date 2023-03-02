@@ -214,7 +214,7 @@ public class SourceFlowLifeCycle<T, SplitT extends SourceSplit> extends ActionFl
             if (barrier.snapshot()) {
                 List<byte[]> states =
                         serializeStates(splitSerializer, reader.snapshotState(barrier.getId()));
-                runningTask.addState(barrier, sourceAction.getId(), states);
+                runningTask.addState(barrier, sourceAction.getName(), states);
             }
             // ack after #addState
             runningTask.ack(barrier);

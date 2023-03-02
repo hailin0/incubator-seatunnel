@@ -80,7 +80,7 @@ public class ShuffleSinkFlowLifeCycle extends AbstractFlowLifeCycle
                 prepareClose = true;
             }
             if (barrier.snapshot()) {
-                runningTask.addState(barrier, shuffleAction.getId(), Collections.emptyList());
+                runningTask.addState(barrier, shuffleAction.getName(), Collections.emptyList());
             }
             runningTask.ack(barrier);
 
@@ -106,7 +106,7 @@ public class ShuffleSinkFlowLifeCycle extends AbstractFlowLifeCycle
     public void close() throws IOException {
         super.close();
         for (Map.Entry<String, IQueue<Record<?>>> shuffleItem : shuffles.entrySet()) {
-            log.info("destroy shuffle queue[{}]", shuffleItem.getKey());
+            log.info("destroy shuffle queue: {}", shuffleItem.getKey());
             shuffleItem.getValue().destroy();
         }
     }

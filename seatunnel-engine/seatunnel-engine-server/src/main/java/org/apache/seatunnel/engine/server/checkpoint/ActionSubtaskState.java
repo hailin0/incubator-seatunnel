@@ -25,7 +25,7 @@ import java.util.List;
 @Data
 public class ActionSubtaskState implements Serializable {
     private static final long serialVersionUID = 1L;
-    private final long actionId;
+    private final String actionName;
     private final int index;
     private final List<byte[]> state;
 }
