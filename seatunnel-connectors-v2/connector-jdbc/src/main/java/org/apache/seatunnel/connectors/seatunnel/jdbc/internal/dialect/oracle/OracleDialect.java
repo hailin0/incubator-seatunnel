@@ -51,12 +51,12 @@ public class OracleDialect implements JdbcDialect {
 
     @Override
     public String quoteIdentifier(String identifier) {
-        return identifier;
+        return "\"" + identifier + "\"";
     }
 
     @Override
     public String tableIdentifier(String database, String tableName) {
-        return quoteIdentifier(tableName);
+        return tableName;
     }
 
     @Override
